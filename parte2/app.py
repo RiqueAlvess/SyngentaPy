@@ -20,7 +20,7 @@ st.title("Lista de Gráficos e KPIs - Dashboard Syngenta")
 @st.cache_data
 def load_dashboard_data():
     """Carrega dados do dashboard de Segurança (Visitas, Programas, Medições) do arquivo Excel."""
-    xls = pd.ExcelFile(r"arquivos\exportados\DASHBOAR SYNGENTA.xlsx")
+    xls = pd.ExcelFile(r"exportados\DASHBOAR SYNGENTA.xlsx")
     visitas = pd.read_excel(xls, sheet_name="VISITAS")
     programas = pd.read_excel(xls, sheet_name="PROGRAMAS")
     medicoes = pd.read_excel(xls, sheet_name="MEDIÇÕES")
@@ -29,7 +29,7 @@ def load_dashboard_data():
 @st.cache_data
 def load_absences():
     """Carrega dados de Absenteísmo."""
-    df = pd.read_excel(r"arquivos\exportados\Absenteísmo.xlsx")
+    df = pd.read_excel(r"exportados\Absenteísmo.xlsx")
     # Converter valores decimais com vírgula em 'Dias' para float
     if df['Dias'].dtype == object:
         df['Dias'] = df['Dias'].astype(str).str.replace(',', '.')
@@ -42,19 +42,19 @@ def load_absences():
 @st.cache_data
 def load_aso():
     """Carrega dados de ASO (Atestado de Saúde Ocupacional)."""
-    return pd.read_excel(r"arquivos\exportados\ASO Válidos.xlsx")
+    return pd.read_excel(r"exportados\ASO Válidos.xlsx")
 
 @st.cache_data
 def load_exams():
     """Carrega dados de Exames Médicos."""
-    df = pd.read_excel(r"arquivos\exportados\Exames Alterados.xlsx")
+    df = pd.read_excel(r"exportados\Exames Alterados.xlsx")
     df['Data do Exame'] = pd.to_datetime(df['Data do Exame'], dayfirst=True, errors='coerce')
     return df
 
 @st.cache_data
 def load_consults():
     """Carrega dados de Consultas Técnicas."""
-    df = pd.read_excel(r"arquivos\exportados\Consultas Técnicas.xlsx")
+    df = pd.read_excel(r"exportados\Consultas Técnicas.xlsx")
     # Remover linhas de observação (por exemplo, "Média de visita") e converter meses para datas
     df = df[~df['DATA'].astype(str).str.contains('Média', case=False, na=False)]
     month_map = {"jan":1,"fev":2,"mar":3,"abr":4,"mai":5,"jun":6,
@@ -73,7 +73,7 @@ def load_consults():
 @st.cache_data
 def load_ppp():
     """Carrega dados de PPP (solicitações de Perfil Profissiográfico Previdenciário)."""
-    return pd.read_excel(r"arquivos\exportados\PPP SYNGENTA - 01-05-2025 - 21-07-2025.xlsx", header=None, names=["ID", "Descrição", "Status"])
+    return pd.read_excel(r"exportados\PPP SYNGENTA - 01-05-2025 - 21-07-2025.xlsx", header=None, names=["ID", "Descrição", "Status"])
 
 # Carregar todos os dados
 visitas_df, programas_df, medicoes_df = load_dashboard_data()
@@ -390,3 +390,4 @@ elif area_option == "Saúde Ocupacional":
         exames_filtered.to_excel(writer, index=False, sheet_name="Exames")
         consults_filtered.to_excel(writer, index=False, sheet_name="Consultas")
     st.sidebar.download_button("📥 Baixar dados (Saúde)", data=health_output.getvalue(), file_name="dados_saude.xlsx")
+
